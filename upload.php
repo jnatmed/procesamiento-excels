@@ -37,11 +37,11 @@ $response = [];
 if ($_FILES['excel-file-1']['error'] === UPLOAD_ERR_OK && $_FILES['excel-file-2']['error'] === UPLOAD_ERR_OK) {
     // Cargar los archivos Excel
     $spreadsheet1 = IOFactory::load($_FILES['excel-file-1']['tmp_name']);
-    $worksheet1 = $spreadsheet1->getActiveSheet();
+    $worksheet1 = $spreadsheet1->getSheet(0); // Obtener la primera hoja
     $data1 = $worksheet1->toArray();
 
     $spreadsheet2 = IOFactory::load($_FILES['excel-file-2']['tmp_name']);
-    $worksheet2 = $spreadsheet2->getActiveSheet();
+    $worksheet2 = $spreadsheet2->getSheet(0); // Obtener la primera hoja
     $data2 = $worksheet2->toArray();
 
     // Construir la tabla HTML del primer archivo
