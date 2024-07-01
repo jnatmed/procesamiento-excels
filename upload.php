@@ -2,6 +2,17 @@
 require 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// Definir constantes para las columnas
+define('COLUMNA_FACTURA', 5);
+define('COLUMNA_MONTO_TOTAL', 8);
+define('COLUMNA_CUOTA_NUMERO', 9);
+
+// Crear un logger
+$log = new Logger('excel_comparison');
+$log->pushHandler(new StreamHandler('logs/app.log', Logger::DEBUG));
 
 // Función para eliminar acentos
 function eliminarAcentos($string) {
@@ -20,79 +31,117 @@ function eliminarAcentos($string) {
     return strtr($string, $acentos);
 }
 
-// Definir las cabeceras esperadas
-$expectedHeaders = ['Unid', 'Cred', 'Apellido y Nombres', 'Cuota de Mes', 'Fecha de Operación', 'Factura', 'Monto Total', 'Remito', 'Cuota Computada', 'Cuota Nº', 'Detalle de la compra', 'Observaciones', 'validacion de credencial'];
+// Procesar ambos archivos Excel
+$response = [];
 
-if ($_FILES['excel-file']['error'] === UPLOAD_ERR_OK) {
-    $filePath = $_FILES['excel-file']['tmp_name'];
+if ($_FILES['excel-file-1']['error'] === UPLOAD_ERR_OK && $_FILES['excel-file-2']['error'] === UPLOAD_ERR_OK) {
+    // Cargar los archivos Excel
+    $spreadsheet1 = IOFactory::load($_FILES['excel-file-1']['tmp_name']);
+    $worksheet1 = $spreadsheet1->getActiveSheet();
+    $data1 = $worksheet1->toArray();
 
-    // Cargar el archivo Excel
-    $spreadsheet = IOFactory::load($filePath);
+    $spreadsheet2 = IOFactory::load($_FILES['excel-file-2']['tmp_name']);
+    $worksheet2 = $spreadsheet2->getActiveSheet();
+    $data2 = $worksheet2->toArray();
 
-    // Seleccionar la primera hoja de trabajo
-    $worksheet = $spreadsheet->getActiveSheet();
+    // Construir la tabla HTML del primer archivo
+    $table1 = '<h2>Contenido del Primer Excel</h2><table>';
+    foreach ($data1 as $row) {
+        if (!array_filter($row)) continue; // Saltar filas vacías
+        $table1 .= '<tr>';
+        foreach ($row as $cell) {
+            $table1 .= '<td>' . htmlspecialchars($cell) . '</td>';
+        }
+        $table1 .= '</tr>';
+    }
+    $table1 .= '</table>';
+    $response['table1'] = $table1;
 
-    // Obtener los datos de la hoja de trabajo
-    $data = $worksheet->toArray();
+    // Construir la tabla HTML del segundo archivo
+    $table2 = '<h2>Contenido del Segundo Excel</h2><table>';
+    foreach ($data2 as $row) {
+        if (!array_filter($row)) continue; // Saltar filas vacías
+        $table2 .= '<tr>';
+        foreach ($row as $cell) {
+            $table2 .= '<td>' . htmlspecialchars($cell) . '</td>';
+        }
+        $table2 .= '</tr>';
+    }
+    $table2 .= '</table>';
+    $response['table2'] = $table2;
 
-    // Inicializar un array para almacenar los valores de las combinaciones de "Factura", "Cuota Computada" y "Cuota Nº"
-    $combinations = [];
+    // Aquí puedes realizar la comparación entre los datos de $data1 y $data2
     $repeatedRows = [];
-    $startRow = 0;
 
-    // Buscar la fila de encabezados
-    foreach ($data as $rowIndex => $row) {
-        if ($row === $expectedHeaders) {
-            $startRow = $rowIndex;
-            break;
-        }
-    }
+    foreach ($data2 as $index2 => $row2) {
+        // Saltar filas vacías
+        if (!array_filter($row2)) continue;
 
-    // Recorrer las filas desde la fila de encabezados para extraer los valores de las combinaciones y detectar repeticiones
-    for ($i = $startRow + 1; $i < count($data); $i++) {
-        $row = $data[$i];
-        if (isset($row[5], $row[8], $row[9])) { // Asegúrate de que existen las columnas "Factura" (5), "Cuota Computada" (8), "Cuota Nº" (9)
-            $combination = strtolower(eliminarAcentos(trim($row[5]))) . '|' . strtolower(eliminarAcentos(trim($row[8]))) . '|' . strtolower(eliminarAcentos(trim($row[9])));
-            if (array_key_exists($combination, $combinations)) {
-                // Marcar tanto la fila repetida como la primera aparición
-                $repeatedRows[] = $i;
-                $repeatedRows[] = $combinations[$combination];
-            } else {
-                $combinations[$combination] = $i;
+
+        // Verificar si las columnas necesarias están presentes en el segundo archivo
+        if (isset($row2[COLUMNA_FACTURA], $row2[COLUMNA_MONTO_TOTAL], $row2[COLUMNA_CUOTA_NUMERO])) {
+            $factura2 = $row2[COLUMNA_FACTURA];
+            $montoTotal2 = $row2[COLUMNA_MONTO_TOTAL];
+            $cuotaNumero2 = $row2[COLUMNA_CUOTA_NUMERO];
+
+            // Variable para indicar si la fila es repetida
+            $isRepeated = false;
+
+            
+
+            // Recorrer el primer archivo para encontrar coincidencias
+            foreach ($data1 as $index1 => $row1) {
+                // Saltar filas vacías
+                if (!array_filter($row1)) continue;
+
+                if (isset($row1[COLUMNA_FACTURA], $row1[COLUMNA_MONTO_TOTAL], $row1[COLUMNA_CUOTA_NUMERO])) {
+                    $factura1 = $row1[COLUMNA_FACTURA];
+                    $montoTotal1 = $row1[COLUMNA_MONTO_TOTAL];
+                    $cuotaNumero1 = $row1[COLUMNA_CUOTA_NUMERO];
+
+                    $log->info("analizando comparando: [$factura1 vs $factura2 && $montoTotal1 vs $montoTotal2 && $cuotaNumero1 vs $cuotaNumero2");
+                    // Comparar valores
+                    if ($factura1 === $factura2 && $montoTotal1 === $montoTotal2 && $cuotaNumero1 === $cuotaNumero2) {
+                        // Si hay coincidencia, marcar la fila como repetida en el segundo archivo
+                        $log->info("Encontre repetida !");
+                        $isRepeated = true;
+                        break; // No es necesario seguir comparando con las siguientes filas del primer archivo
+                    }else{
+                        $log->info("No hay repetida");
+                    }
+                }
+            }
+
+            // Agregar la fila al resultado con clase CSS si es repetida
+            if ($isRepeated) {
+                $repeatedRows[$index2] = true;
             }
         }
     }
 
-    echo '<table>';
-    echo '<thead><tr>';
-    foreach ($data[$startRow] as $header) {
-        echo "<th>{$header}</th>";
-    }
-    echo '</tr></thead>';
-    echo '<tbody>';
-    for ($i = $startRow + 1; $i < count($data); $i++) {
-        // Verificar si la fila tiene datos
-        if (array_filter($data[$i])) {
-            $rowClass = in_array($i, $repeatedRows) ? 'class="repeated-row"' : '';
-            echo "<tr {$rowClass}>";
-            foreach ($data[$i] as $cell) {
-                echo "<td>{$cell}</td>";
+    // Construir la tabla HTML solo con las filas repetidas del segundo archivo
+    $markedTable2 = '<h2>Filas Repetidas en el Segundo Excel</h2><table>';
+    foreach ($data2 as $index => $row) {
+        if (!array_filter($row)) continue; // Saltar filas vacías
+        if (isset($repeatedRows[$index])) {
+            $rowHtml = '<tr class="repeated-row">';
+            foreach ($row as $cell) {
+                $rowHtml .= '<td>' . htmlspecialchars($cell) . '</td>';
             }
-            echo '</tr>';
+            $rowHtml .= '</tr>';
+            $markedTable2 .= $rowHtml;
         }
     }
-    echo '</tbody></table>';
+    $markedTable2 .= '</table>';
 
-    if (!empty($repeatedRows)) {
-        echo '<h2>Filas con valores repetidos en las columnas "Factura", "Cuota Computada" y "Cuota Nº":</h2><ul>';
-        foreach ($repeatedRows as $rowIndex) {
-            echo '<li>Fila ' . ($rowIndex + 1) . '</li>';
-        }
-        echo '</ul>';
-    } else {
-        echo '<p>No se encontraron valores repetidos en las columnas "Factura", "Cuota Computada" y "Cuota Nº".</p>';
-    }
+    $response['markedTable2'] = $markedTable2;
+
+
 } else {
-    echo '<p>Error al subir el archivo.</p>';
+    $response['error'] = 'Error al subir los archivos';
 }
+
+// Respuesta JSON
+echo json_encode($response);
+
 ?>
