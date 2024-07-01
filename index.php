@@ -1,62 +1,9 @@
-<?php
-require 'vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\IOFactory;
-
-// Función para eliminar acentos
-function eliminarAcentos($string) {
-    $acentos = array(
-        'Á'=>'A', 'É'=>'E', 'Í'=>'I', 'Ó'=>'O', 'Ú'=>'U',
-        'á'=>'a', 'é'=>'e', 'í'=>'i', 'ó'=>'o', 'ú'=>'u',
-        'À'=>'A', 'È'=>'E', 'Ì'=>'I', 'Ò'=>'O', 'Ù'=>'U',
-        'à'=>'a', 'è'=>'e', 'ì'=>'i', 'ò'=>'o', 'ù'=>'u',
-        'Ä'=>'A', 'Ë'=>'E', 'Ï'=>'I', 'Ö'=>'O', 'Ü'=>'U',
-        'ä'=>'a', 'ë'=>'e', 'ï'=>'i', 'ö'=>'o', 'ü'=>'u',
-        'Â'=>'A', 'Ê'=>'E', 'Î'=>'I', 'Ô'=>'O', 'Û'=>'U',
-        'â'=>'a', 'ê'=>'e', 'î'=>'i', 'ô'=>'o', 'û'=>'u',
-        'Ã'=>'A', 'Õ'=>'O', 'ã'=>'a', 'õ'=>'o',
-        'Å'=>'A', 'å'=>'a', 'Ñ'=>'N', 'ñ'=>'n', 'Ç'=>'C', 'ç'=>'c'
-    );
-    return strtr($string, $acentos);
-}
-
-// Ruta relativa al archivo Excel
-$filePath = 'LICITACIONES 2023.xlsx';
-
-// Cargar el archivo Excel
-$spreadsheet = IOFactory::load($filePath);
-
-// Seleccionar la primera hoja de trabajo
-$worksheet = $spreadsheet->getActiveSheet();
-
-// Obtener los datos de la hoja de trabajo
-$data = $worksheet->toArray();
-
-// Inicializar un array para almacenar los valores de la columna "OBJETO"
-$objetoValues = [];
-$repeatedRows = [];
-
-// Recorrer las filas para extraer los valores de la columna "OBJETO" y detectar repeticiones
-foreach ($data as $rowIndex => $row) {
-    if ($rowIndex === 0) continue; // Omitir la fila de encabezados
-    if (isset($row[3])) { // Asegúrate de que existe la columna "OBJETO" (índice 3)
-        $value = strtolower(eliminarAcentos(trim($row[3]))); // Convertir a minúsculas, eliminar acentos y espacios
-        if (in_array($value, $objetoValues)) {
-            $repeatedRows[] = $rowIndex;
-        } else {
-            $objetoValues[] = $value;
-        }
-    }
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de Excel</title>
+    <title>Subir y Mostrar Excel</title>
     <style>
         table {
             width: 100%;
@@ -73,48 +20,80 @@ foreach ($data as $rowIndex => $row) {
         .repeated-row {
             background-color: #ffcccc;
         }
+        .drop-zone {
+            max-width: 400px;
+            height: 200px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            line-height: 160px;
+            color: #aaa;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        .drop-zone.dragover {
+            border-color: #000;
+            color: #000;
+        }
     </style>
 </head>
 <body>
 
-<h1>Datos del archivo LICITACIONES 2023</h1>
+<h1>Subir y Mostrar Excel</h1>
 
-<table>
-    <thead>
-        <tr>
-            <?php
-            // Encabezados de la tabla
-            foreach ($data[0] as $header) {
-                echo "<th>{$header}</th>";
-            }
-            ?>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Filas de la tabla
-        for ($i = 1; $i < count($data); $i++) {
-            $rowClass = in_array($i, $repeatedRows) ? 'class="repeated-row"' : '';
-            echo "<tr {$rowClass}>";
-            foreach ($data[$i] as $cell) {
-                echo "<td>{$cell}</td>";
-            }
-            echo "</tr>";
+<div class="drop-zone" id="drop-zone">Arrastra y suelta tu archivo aquí o haz click para subir</div>
+<form id="upload-form" enctype="multipart/form-data" style="display: none;">
+    <input type="file" id="file-input" name="excel-file" accept=".xlsx">
+</form>
+
+<div id="table-container"></div>
+
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadForm = document.getElementById('upload-form');
+    const tableContainer = document.getElementById('table-container');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            fileInput.files = files;
+            handleFileUpload(files[0]);
         }
-        ?>
-    </tbody>
-</table>
+    });
 
-<?php if (!empty($repeatedRows)): ?>
-    <h2>Filas con valores repetidos en la columna "OBJETO":</h2>
-    <ul>
-        <?php foreach ($repeatedRows as $rowIndex): ?>
-            <li>Fila <?php echo $rowIndex + 1; ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>No se encontraron valores repetidos en la columna "OBJETO".</p>
-<?php endif; ?>
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files[0]);
+        }
+    });
+
+    function handleFileUpload(file) {
+        const formData = new FormData(uploadForm);
+        formData.append('excel-file', file);
+
+        fetch('upload.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => tableContainer.innerHTML = html)
+        .catch(error => console.error('Error al subir el archivo:', error));
+    }
+</script>
 
 </body>
 </html>
