@@ -20,6 +20,11 @@
         .repeated-row {
             background-color: #ffcccc;
         }
+
+        .repeated-row-alt {
+            background-color: #ff9999; /* Color alternativo para las filas repetidas */
+        }      
+                
         .drop-zone {
             max-width: 400px;
             height: 200px;
@@ -37,6 +42,8 @@
             border-color: #000;
             color: #000;
         }
+
+  
     </style>
 </head>
 <body>

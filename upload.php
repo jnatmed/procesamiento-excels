@@ -71,12 +71,15 @@ if ($_FILES['excel-file']['error'] === UPLOAD_ERR_OK) {
     echo '</tr></thead>';
     echo '<tbody>';
     for ($i = $startRow + 1; $i < count($data); $i++) {
-        $rowClass = in_array($i, $repeatedRows) ? 'class="repeated-row"' : '';
-        echo "<tr {$rowClass}>";
-        foreach ($data[$i] as $cell) {
-            echo "<td>{$cell}</td>";
+        // Verificar si la fila tiene datos
+        if (array_filter($data[$i])) {
+            $rowClass = in_array($i, $repeatedRows) ? 'class="repeated-row"' : '';
+            echo "<tr {$rowClass}>";
+            foreach ($data[$i] as $cell) {
+                echo "<td>{$cell}</td>";
+            }
+            echo '</tr>';
         }
-        echo '</tr>';
     }
     echo '</tbody></table>';
 
