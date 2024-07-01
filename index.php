@@ -4,51 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subir y Mostrar Excel</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .repeated-row {
-            background-color: #ffcccc;
-        }
-
-        .repeated-row-alt {
-            background-color: #ff9999; /* Color alternativo para las filas repetidas */
-        }      
-                
-        .drop-zone {
-            max-width: 400px;
-            height: 200px;
-            padding: 20px;
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            font-size: 18px;
-            text-align: center;
-            line-height: 160px;
-            color: #aaa;
-            margin: 20px auto;
-            cursor: pointer;
-        }
-        .drop-zone.dragover {
-            border-color: #000;
-            color: #000;
-        }
-
-  
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<h1>Subir y Mostrar Excel</h1>
+    <header>
+        <h1>Sistema Para Procesar Archivos de Excel</h1>
+        <h2>Subir y Mostrar Excel</h2>
+    </header>
 
 <div class="drop-zone" id="drop-zone">Arrastra y suelta tu archivo aquí o haz click para subir</div>
 <form id="upload-form" enctype="multipart/form-data" style="display: none;">
