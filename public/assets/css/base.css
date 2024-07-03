@@ -1,0 +1,59 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+.repeated-row {
+    background-color: #ffcccc;
+}
+
+.repeated-row-alt {
+    background-color: #ff9999; /* Color alternativo para las filas repetidas */
+}      
+
+h1, h2 {
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    display: inline-block;
+}
+
+h1 {
+    text-decoration: underline;
+}
+
+.drop-zone {
+    max-width: 400px;
+    height: 200px;
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    font-size: 18px;
+    text-align: center;
+    line-height: 160px;
+    color: #aaa;
+    margin: 20px auto;
+    cursor: pointer;
+}
+.drop-zone.dragover {
+    border-color: #000;
+    color: #000;
+}
+
+header {
+    background-image: url('https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/Outlook-new-Hero-Background-1600x560?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=2000&hei=700&qlt=100&fmt=png-alpha&fit=constrain');
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir el encabezado */
+    background-repeat: no-repeat; /* Evita que la imagen de fondo se repita */
+    padding: 20px; /* Ajusta el relleno según sea necesario */
+    text-align: center; /* Centra el contenido del encabezado */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
