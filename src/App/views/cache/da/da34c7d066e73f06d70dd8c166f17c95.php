@@ -34,13 +34,18 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
     protected function doDisplay(array $context, array $blocks = [])
     {
         $macros = $this->macros;
+        // line 1
         yield "<meta charset=\"UTF-8\">
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 <link rel=\"stylesheet\" href=\"/assets/css/base.css\">
 
 <script src=\"/assets/js/app.js\"></script>
 
-<title><?= \$titulo ?? \"Procesador de Excels\" ?></title>";
+<title>";
+        // line 7
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("titulo", $context)) ? (Twig\Extension\CoreExtension::default(($context["titulo"] ?? null), "Procesador de Excels")) : ("Procesador de Excels")), "html", null, true);
+        yield "</title>
+";
         return; yield '';
     }
 
@@ -55,9 +60,17 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
     /**
      * @codeCoverageIgnore
      */
+    public function isTraitable()
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array ();
+        return array (  46 => 7,  38 => 1,);
     }
 
     public function getSourceContext()
@@ -68,6 +81,7 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
 
 <script src=\"/assets/js/app.js\"></script>
 
-<title><?= \$titulo ?? \"Procesador de Excels\" ?></title>", "parts/head.view.html", "C:\\Users\\administrator\\Documents\\GitHub\\procesamiento-excels\\src\\App\\views\\parts\\head.view.html");
+<title>{{ titulo | default('Procesador de Excels') }}</title>
+", "parts/head.view.html", "C:\\Users\\administrator\\Documents\\GitHub\\procesamiento-excels\\src\\App\\views\\parts\\head.view.html");
     }
 }

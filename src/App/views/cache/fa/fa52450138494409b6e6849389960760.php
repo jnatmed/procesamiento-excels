@@ -42,12 +42,14 @@ class __TwigTemplate_18bee2095271536796b0160673e2d41c extends Template
         // line 4
         yield from         $this->loadTemplate("parts/head.view.html", "index.view.html", 4)->unwrap()->yield($context);
         // line 5
-        yield "</head>
+        yield "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js\"></script>
+
+</head>
 <body class=\"home\">
     ";
-        // line 7
-        yield from         $this->loadTemplate("parts/header.view.html", "index.view.html", 7)->unwrap()->yield($context);
-        // line 8
+        // line 9
+        yield from         $this->loadTemplate("parts/header.view.html", "index.view.html", 9)->unwrap()->yield($context);
+        // line 10
         yield "
     <section>
         <h3>Comparar Archivos Excel</h3>
@@ -69,6 +71,8 @@ class __TwigTemplate_18bee2095271536796b0160673e2d41c extends Template
     <div id=\"table-container-1\" class=\"table-container\"></div>
     <div id=\"table-container-2\" class=\"table-container\"></div>
     <div id=\"table-container-3\" class=\"table-container\"></div>
+
+    <button id=\"download-button\" style=\"display: none;\">Descargar Comparación</button>
 
 </body>
 </html>
@@ -97,7 +101,7 @@ class __TwigTemplate_18bee2095271536796b0160673e2d41c extends Template
      */
     public function getDebugInfo()
     {
-        return array (  51 => 8,  49 => 7,  45 => 5,  43 => 4,  38 => 1,);
+        return array (  53 => 10,  51 => 9,  45 => 5,  43 => 4,  38 => 1,);
     }
 
     public function getSourceContext()
@@ -106,6 +110,8 @@ class __TwigTemplate_18bee2095271536796b0160673e2d41c extends Template
 <html lang=\"es\">
 <head>
     {% include 'parts/head.view.html' %}
+    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js\"></script>
+
 </head>
 <body class=\"home\">
     {% include 'parts/header.view.html' %}
@@ -130,6 +136,8 @@ class __TwigTemplate_18bee2095271536796b0160673e2d41c extends Template
     <div id=\"table-container-1\" class=\"table-container\"></div>
     <div id=\"table-container-2\" class=\"table-container\"></div>
     <div id=\"table-container-3\" class=\"table-container\"></div>
+
+    <button id=\"download-button\" style=\"display: none;\">Descargar Comparación</button>
 
 </body>
 </html>

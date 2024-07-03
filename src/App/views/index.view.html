@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
     {% include 'parts/head.view.html' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
 </head>
 <body class="home">
     {% include 'parts/header.view.html' %}
@@ -26,6 +28,8 @@
     <div id="table-container-1" class="table-container"></div>
     <div id="table-container-2" class="table-container"></div>
     <div id="table-container-3" class="table-container"></div>
+
+    <button id="download-button" style="display: none;">Descargar Comparación</button>
 
 </body>
 </html>

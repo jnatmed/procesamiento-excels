@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableContainer1 = document.getElementById('table-container-1');
     const tableContainer2 = document.getElementById('table-container-2');
     const tableContainer3 = document.getElementById('table-container-3');
+    const downloadButton = document.getElementById('download-button');
+
 
     // Mostrar nombre de archivo al arrastrar y soltar o seleccionar archivo
     ;[dropZone1, dropZone2].forEach(dropZone => {
@@ -78,19 +80,32 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.error) {
                 console.error(data.error);
             } else {
-                // if (data.table1) {
-                //     tableContainer1.innerHTML = data.table1;
-                // }
-                // if (data.table2) {
-                //     tableContainer2.innerHTML = data.table2;
-                // }
-                if (data.markedTable2) {
-                    // Mostrar la tabla marcada en table-container-3
-                    tableContainer3.innerHTML = '<h2>Tabla Comparativa de Excel</h2>' + data.markedTable2;
 
+                if (data.markedTable2) {
+                    let tableHtml = '<h2>Tabla Comparativa de Excel</h2><table>';
+                    data.markedTable2.forEach(row => {
+                        tableHtml += '<tr>';
+                        row.forEach(cell => {
+                            tableHtml += '<td>' + cell + '</td>';
+                        });
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</table>';
+                    tableContainer3.innerHTML = tableHtml;
+                    downloadButton.style.display = 'block';
+                    downloadButton.setAttribute('data-marked-table', JSON.stringify(data.markedTable2));
                 }                
             }
         })
         .catch(error => console.error('Error:', error));
     });
+    downloadButton.addEventListener('click', function() {
+        const markedTable = JSON.parse(this.getAttribute('data-marked-table'));
+
+        const ws = XLSX.utils.aoa_to_sheet(markedTable);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Comparación");
+
+        XLSX.writeFile(wb, 'comparacion.xlsx');
+    });    
 });

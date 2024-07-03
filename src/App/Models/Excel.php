@@ -117,23 +117,16 @@ class Excel extends Model
             }
         }
 
-        // Construir la tabla HTML solo con las filas repetidas del segundo archivo
-        $markedTable2 = '<h2>Filas Repetidas en el Segundo Excel</h2><table>';
+        // Construir la matriz de matrices solo con las filas repetidas del segundo archivo
+        $markedTable2Array = [];
         foreach ($data2 as $index => $row) {
-            if (!array_filter($row)) continue; // Saltar filas vacías
+            if (!array_filter($row)) continue;
             if (isset($repeatedRows[$index])) {
-                $rowHtml = '<tr class="repeated-row">';
-                foreach ($row as $cell) {
-                    $rowHtml .= '<td>' . htmlspecialchars($cell) . '</td>';
-                }
-                $rowHtml .= '</tr>';
-                $markedTable2 .= $rowHtml;
+                $markedTable2Array[] = $row;
             }
         }
-        $markedTable2 .= '</table>';
 
-        $response['markedTable2'] = $markedTable2;
-        
+        $response['markedTable2'] = $markedTable2Array;
         return $response;
     }
 
