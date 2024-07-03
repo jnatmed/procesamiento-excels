@@ -1,5 +1,5 @@
 vendor/
 logs/
-composer.json
 composer.lock
 .env
+src/App/views/cache
