@@ -7,6 +7,9 @@ use Monolog\Logger;
 use Monolog\Level;
 use Monolog\Handler\StreamHandler;
 use Dotenv\Dotenv;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
 
 // librerias propias
 use Paw\Core\Router;
@@ -63,7 +66,24 @@ $request = new Request;
 
 
 /**
- * 7) ROUTER
+ * 7) TWIG
+ * Load template engine
+ */
+$templateDir = __DIR__ . $config->get('TEMPLATE_DIR');
+$cacheDir = __DIR__ . $config->get('TEMPLATE_CACHE_DIR');
+
+$loader = new FilesystemLoader($templateDir);
+
+$twig = new Environment($loader, [
+    'cache' => $cacheDir, 
+    'debug' => true,
+]);
+
+$twig->addExtension(new DebugExtension());
+
+
+/**
+ * 8) ROUTER
  * inicializo router para luego agregarle las rutas
  */
 $router = new Router;
@@ -71,7 +91,7 @@ $router->setLogger($log);
 
 
 /**
- * 8) RUTAS
+ * 9) RUTAS
  * Aca van los enrutadores
  */
 $router->get('/', 'ExcelController@cargarExcels');

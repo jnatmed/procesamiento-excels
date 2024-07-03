@@ -18,7 +18,9 @@ class ExcelController extends Controller
 
     public function cargarExcels()
     {
-        require $this->viewsDir . 'index.view.php';
+        // require $this->viewsDir . 'index.view.php';
+        $this->data['titulo'] = "SIST COM | Procesador de Excels";
+        view('index.view', $this->data);
     }
 
     public function procesarExcel()

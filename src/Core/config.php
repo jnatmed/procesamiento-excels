@@ -20,6 +20,9 @@ class Config
         $this->configs['DB_PORT'] = getenv('DB_PORT') ?? '3306';
         $this->configs['DB_CHARSET'] = getenv('DB_CHARSET') ?? 'utf8';      
         $this->configs['OPENCAGEDATA_API_KEY'] = getenv('OPENCAGEDATA_API_KEY') ?? '';
+
+        $this->configs['TEMPLATE_DIR'] =  getenv('TEMPLATE_DIR') ?? '';
+        $this->configs['TEMPLATE_CACHE_DIR'] =  getenv('TEMPLATE_CACHE_DIR') ?? '';
     }
 
     public function joinPaths()
