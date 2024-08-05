@@ -18,7 +18,7 @@
         "vlucas/phpdotenv": "^3.6",
         "robmorgan/phinx": "^0.12",
         "twig/twig": "^2.14",
-        "phpoffice/phpspreadsheet": "^1.23"
+        "phpoffice/phpspreadsheet": "^1.10"
     },
     "autoload": {
         "psr-4": {
