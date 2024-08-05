@@ -24,8 +24,8 @@ class Controller
 
         $this->menu = [
             [
-                'href' => '/excel/procesar',
-                'name' => 'PROCESAR EXCEL'
+                'href' => '/',
+                'name' => 'CARGAR NUEVA ORDEN DE TRABAJO'
             ]
         ];
 
