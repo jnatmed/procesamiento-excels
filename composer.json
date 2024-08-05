@@ -16,7 +16,7 @@
         "filp/whoops": "^2.7",   
         "monolog/monolog": "^2.3",
         "vlucas/phpdotenv": "^3.6",
-        "robmorgan/phinx": "^0.16.0",
+        "robmorgan/phinx": "^0.12",
         "twig/twig": "^2.14",
         "phpoffice/phpspreadsheet": "^1.23"
     },
