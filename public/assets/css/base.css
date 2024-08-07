@@ -57,3 +57,14 @@ header {
     justify-content: center;
     flex-direction: column;
 }
+
+
+.nav-procesador ul{
+    display: flex;
+    justify-content: center;
+    gap: 8%;
+}
+
+.item-list {
+    list-style-type: none;
+}

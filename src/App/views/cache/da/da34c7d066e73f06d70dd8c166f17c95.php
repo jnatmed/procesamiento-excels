@@ -38,11 +38,12 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
         yield "<meta charset=\"UTF-8\">
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 <link rel=\"stylesheet\" href=\"/assets/css/base.css\">
+<link rel=\"stylesheet\" href=\"/assets/css/not-found.css\">
 
 <script src=\"/assets/js/app.js\"></script>
 
 <title>";
-        // line 7
+        // line 8
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((array_key_exists("titulo", $context)) ? (Twig\Extension\CoreExtension::default(($context["titulo"] ?? null), "Procesador de Excels")) : ("Procesador de Excels")), "html", null, true);
         yield "</title>
 ";
@@ -70,7 +71,7 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
      */
     public function getDebugInfo()
     {
-        return array (  46 => 7,  38 => 1,);
+        return array (  47 => 8,  38 => 1,);
     }
 
     public function getSourceContext()
@@ -78,6 +79,7 @@ class __TwigTemplate_6982c7893fa90436c0248465bd359ceb extends Template
         return new Source("<meta charset=\"UTF-8\">
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 <link rel=\"stylesheet\" href=\"/assets/css/base.css\">
+<link rel=\"stylesheet\" href=\"/assets/css/not-found.css\">
 
 <script src=\"/assets/js/app.js\"></script>
 

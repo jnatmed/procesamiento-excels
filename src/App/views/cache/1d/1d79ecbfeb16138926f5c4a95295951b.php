@@ -35,7 +35,17 @@ class __TwigTemplate_ba23e1211b8a6e61542ec6ad97574775 extends Template
     {
         $macros = $this->macros;
         yield "<header>
-        <h1>Sistema Para Procesar Archivos de Excel</h1>
+        <h1><a href=\"/\">Sistema Para Procesar Archivos de Excel</a></h1>
+        <nav class=\"nav-procesador\">
+                <ul>
+                        <li class=\"item-list\">
+                                <a href=\"/\">Procesar Archivos Excel</a>
+                        </li>
+                        <li class=\"item-list\">
+                                <a href=\"/revisar-padron\">Revisar Padron</a>
+                        </li>
+                </ul>
+        </nav>
 </header>";
         return; yield '';
     }
@@ -59,7 +69,17 @@ class __TwigTemplate_ba23e1211b8a6e61542ec6ad97574775 extends Template
     public function getSourceContext()
     {
         return new Source("<header>
-        <h1>Sistema Para Procesar Archivos de Excel</h1>
+        <h1><a href=\"/\">Sistema Para Procesar Archivos de Excel</a></h1>
+        <nav class=\"nav-procesador\">
+                <ul>
+                        <li class=\"item-list\">
+                                <a href=\"/\">Procesar Archivos Excel</a>
+                        </li>
+                        <li class=\"item-list\">
+                                <a href=\"/revisar-padron\">Revisar Padron</a>
+                        </li>
+                </ul>
+        </nav>
 </header>", "parts/header.view.html", "C:\\Users\\administrator\\Documents\\GitHub\\procesamiento-excels\\src\\App\\views\\parts\\header.view.html");
     }
 }
