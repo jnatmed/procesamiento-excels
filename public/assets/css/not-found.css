@@ -1,0 +1,13 @@
+.main-not-found {
+    background-image: url('/assets/imgs/error-404-http-not-found_4.svg');
+    background-size: contain; /* Ajusta la imagen al tamaño del contenedor */
+    background-repeat: no-repeat; /* Evita la repetición de la imagen */
+    background-position: center; /* Centra la imagen */
+    width: 95vw; /* Ancho del viewport */
+    height: 80vh; /* Alto del viewport */
+    margin: 0; /* Elimina el margen por defecto */
+    padding: 0; /* Elimina el padding por defecto */
+    display: flex; /* Para alinear contenido si es necesario */
+    justify-content: center; /* Alinea el contenido al centro horizontal */
+    align-items: center; /* Alinea el contenido al centro vertical */
+}
