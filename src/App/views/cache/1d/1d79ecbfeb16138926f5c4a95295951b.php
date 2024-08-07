@@ -39,10 +39,10 @@ class __TwigTemplate_ba23e1211b8a6e61542ec6ad97574775 extends Template
         <nav class=\"nav-procesador\">
                 <ul>
                         <li class=\"item-list\">
-                                <a href=\"/\">Procesar Archivos Excel</a>
+                                <h2><a href=\"/\">Procesar Archivos Excel</a></h2>
                         </li>
                         <li class=\"item-list\">
-                                <a href=\"/revisar-padron\">Revisar Padron</a>
+                                <h2><a href=\"/revisar-padron\">Revisar Padron</a></h2>
                         </li>
                 </ul>
         </nav>
@@ -73,10 +73,10 @@ class __TwigTemplate_ba23e1211b8a6e61542ec6ad97574775 extends Template
         <nav class=\"nav-procesador\">
                 <ul>
                         <li class=\"item-list\">
-                                <a href=\"/\">Procesar Archivos Excel</a>
+                                <h2><a href=\"/\">Procesar Archivos Excel</a></h2>
                         </li>
                         <li class=\"item-list\">
-                                <a href=\"/revisar-padron\">Revisar Padron</a>
+                                <h2><a href=\"/revisar-padron\">Revisar Padron</a></h2>
                         </li>
                 </ul>
         </nav>

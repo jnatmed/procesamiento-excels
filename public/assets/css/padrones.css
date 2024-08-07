@@ -1,0 +1,54 @@
+/* Estilos generales para detalles */
+details {
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5em;
+    background-color: #f9f9f9;
+}
+
+/* Estilos para summary */
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5em;
+    background-color: #fff;
+    border: none;
+    outline: none;
+    margin: -0.5em -0.5em 0;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Estilos específicos para detalles y tablas de actividad */
+.details-actividad summary {
+    color: #007BFF;
+}
+
+.table-actividad thead {
+    background-color: #e6f7ff;
+    text-align: left;
+    padding: 0.5em;
+}
+
+/* Estilos específicos para detalles y tablas de retirados */
+.details-retirados summary {
+    color: #FF5733;
+}
+
+.table-retirados thead {
+    background-color: #ffe6e6;
+    text-align: left;
+    padding: 0.5em;
+}
+
+/* Estilos comunes para tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5em;
+}
+
+tbody td {
+    padding: 0.5em;
+    border-top: 1px solid #ddd;
+}

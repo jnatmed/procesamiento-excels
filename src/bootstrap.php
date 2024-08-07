@@ -96,4 +96,5 @@ $router->setLogger($log);
  */
 $router->get('/', 'ExcelController@cargarExcels');
 $router->post('/excel/procesar', 'ExcelController@procesarExcel');
+$router->get('/revisar-padron', 'ExcelController@procesarPadron');
 

@@ -10,6 +10,7 @@ use Paw\App\Models\Excel;
 class ExcelController extends Controller
 {
     public ?string $modelName = Excel::class;
+    public $data;
 
     public function __construct()
     {
@@ -53,4 +54,11 @@ class ExcelController extends Controller
             $response['error'] = 'Error al subir los archivos';
         }
     }
+
+    public function procesarPadron()
+    {
+        
+        view('padron-list.view');
+    }
+
 }

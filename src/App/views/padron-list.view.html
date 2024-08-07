@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% include 'parts/head.view.html' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/padrones.css">
+</head>
+<body class="home">
+    {% include 'parts/header.view.html' %}
+
+    <main>
+        <details class="details-actividad">
+            <summary class="summary-actividad">Agentes en Actividad</summary>
+            <table class="table-actividad">
+                <thead>
+                    <tr>
+                        <th>Lista detallada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for row in array %}
+                            <td>  </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        <details class="details-retirados">
+            <summary class="summary-retirados">Agentes Retirados</summary>
+            <table class="table-retirados">
+                <thead>Lista detallada</thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </details>
+
+    </main>
+
+</body>
+</html>
