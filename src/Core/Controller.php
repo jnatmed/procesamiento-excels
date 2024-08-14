@@ -15,10 +15,13 @@ class Controller
     public array $menu;
 
     public $request;
+    public $qb;
+    public $model;
 
     public function __construct(){
         
-        global $connection, $log;        
+        global $connection, $log;    
+            
 
         $this->viewsDir = __DIR__ . '/../App/views/';
 

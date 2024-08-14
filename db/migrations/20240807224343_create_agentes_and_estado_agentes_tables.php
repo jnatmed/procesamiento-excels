@@ -32,10 +32,10 @@ final class CreateAgentesAndEstadoAgentesTables extends AbstractMigration
 
         // Crear la tabla agentes
         $this->table('agentes')
-            ->addColumn('cuil', 'string', ['limit' => 20])
             ->addColumn('credencial', 'string', ['limit' => 50])
             ->addColumn('apellido', 'string', ['limit' => 50])
             ->addColumn('nombre', 'string', ['limit' => 50])
+            ->addColumn('cuil', 'string', ['limit' => 50])
             ->addColumn('estado_id', 'integer', ['signed' => false]) // Clave foránea no firmada
             ->addForeignKey('estado_id', 'estado_agentes', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();

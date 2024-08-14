@@ -1,0 +1,115 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* Fondo de la página */
+}
+
+/* Title Styles */
+.title {
+    text-align: center;
+    margin: 20px;
+    font-size: 24px; /* Tamaño de fuente del título */
+    color: #333;
+}
+
+/* Table Styles */
+.agent-table {
+    width: 80%; /* Ancho de la tabla reducido */
+    max-width: 1000px; /* Ancho máximo para evitar que sea demasiado grande */
+    margin: 20px auto; /* Centrando la tabla */
+    border-collapse: collapse;
+    background-color: #fff; /* Fondo blanco para la tabla */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Para que los bordes redondeados se vean bien */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle un efecto de profundidad */
+}
+
+.agent-table th, .agent-table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px; /* Relleno reducido */
+    text-align: left;
+}
+
+.agent-table th {
+    background-color: #f4f4f4;
+    font-size: 14px; /* Tamaño de fuente de los encabezados */
+}
+
+.agent-table td {
+    font-size: 14px; /* Tamaño de fuente de las celdas */
+}
+
+.agent-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.agent-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Pagination Styles */
+.pagination {
+    text-align: center;
+    margin: 20px auto;
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 6px 12px; /* Tamaño de los enlaces reducido */
+    margin: 0 4px;
+    text-decoration: none;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    font-size: 14px; /* Tamaño de fuente para los enlaces */
+}
+
+.pagination-link:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination-link.active {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+
+/* Contenedor del formulario de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: center; /* Centra el formulario horizontalmente */
+    margin: 20px 0; /* Espacio arriba y abajo del formulario */
+}
+
+/* Estilos para el input de búsqueda */
+.search-container input[type="text"] {
+    width: 100%; /* Ocupa el ancho disponible del contenedor */
+    max-width: 400px; /* Ancho máximo del input */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Asegura que el padding no aumente el ancho del input */
+}
+
+/* Estilos para el botón de búsqueda */
+.search-container button {
+    padding: 10px 20px;
+    margin-left: 10px; /* Espacio entre el input y el botón */
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    font-size: 16px;
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s ease; /* Efecto de transición para el color de fondo */
+}
+
+/* Efecto al pasar el cursor sobre el botón */
+.search-container button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el cursor */
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% include 'parts/head.view.html' %}
+    <link rel="stylesheet" href="styles.css"> <!-- Asegúrate de enlazar tu archivo CSS -->
+    <link rel="stylesheet" href="/assets/css/listado_agentes.css">
+</head>
+<body class="home">
+    {% include 'parts/header.view.html' %}
+    
+    <h1 class="title">Listado de Agentes</h1>
+
+    <form method="GET" action="" style="padding: 10px; background-color: #f0f0f0;">
+        <div class="search-container">
+            <input type="text" name="search" placeholder="Buscar agentes..." value="{{ searchTerm }}" />
+            <button type="submit">Buscar</button>
+        </div>
+    </form>
+
+    <table class="agent-table">
+        <thead>
+            <tr>
+                <th>Credencial</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Cuil</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agente in datos %}
+            <tr>
+                <td>{{ agente.credencial }}</td>
+                <td>{{ agente.apellido }}</td>
+                <td>{{ agente.nombre }}</td>
+                <td>{{ agente.cuil }}</td>
+                <td>{{ agente.estado }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if pagina > 1 %}
+        <a href="?pagina={{ pagina - 1 }}" class="pagination-link">« Anterior</a>
+        {% endif %}
+
+        {% for i in 1..totalPaginas %}
+        <a href="?pagina={{ i }}" class="pagination-link {{ i == pagina ? 'active' : '' }}">{{ i }}</a>
+        {% endfor %}
+
+        {% if pagina < totalPaginas %}
+        <a href="?pagina={{ pagina + 1 }}" class="pagination-link">Siguiente »</a>
+        {% endif %}
+    </div>
+</body>
+</html>
