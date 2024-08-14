@@ -7,8 +7,6 @@ use Paw\Core\Controller;
 class ErrorController extends Controller
 {
 
-    public ?string $modelName = null;
-
     public function __construct(){
 
         parent::__construct();

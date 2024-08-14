@@ -95,6 +95,7 @@ $router->setLogger($log);
  * Aca van los enrutadores
  */
 $router->get('/', 'ExcelController@cargarExcels');
+$router->get('/revisar-padron', 'ExcelController@procesarPadron');
 $router->post('/excel/procesar', 'ExcelController@procesarExcel');
 $router->get('/revisar-padron', 'ExcelController@procesarPadron');
 

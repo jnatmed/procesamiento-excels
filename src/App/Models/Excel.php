@@ -14,7 +14,8 @@ define('COLUMNA_CUOTA_NUMERO', 9);
 
 class Excel extends Model
 {
-    
+    protected $table = 'agentes';
+
     // Función para eliminar acentos
     public function eliminarAcentos($string) {
         $acentos = array(
@@ -128,6 +129,90 @@ class Excel extends Model
 
         $response['markedTable2'] = $markedTable2Array;
         return $response;
+    }
+
+    public function procesarExcels(
+            $excelAgentesActivos,
+            $excelAgentesRetirados){
+        try {
+
+            // Procesar el primer archivo
+            $sheet1 = $excelAgentesActivos->getActiveSheet();
+            foreach ($sheet1->getRowIterator() as $row) {
+                $data = [];
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false);
+
+                foreach ($cellIterator as $cell) {
+                    $data[] = $cell->getValue();
+                }
+
+                $registro = [
+                    'credencial' => $data[0],  // Ajustar con base en el índice correcto
+                    'apellido'   => $data[1],  // Ajustar con base en el índice correcto
+                    'nombre'     => $data[2],  // Ajustar con base en el índice correcto
+                    'cuil'       => '',  
+                    'estado_agente' => 'actividad',  // Suponiendo que este archivo es solo de activos
+                ];
+
+                $this->queryBuilder->insert($this->table, $registro);
+            }
+
+            // Procesar el segundo archivo
+            $sheet2 = $excelAgentesRetirados->getActiveSheet();
+            foreach ($sheet2->getRowIterator() as $row) {
+                $data = [];
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false);
+
+                foreach ($cellIterator as $cell) {
+                    $data[] = $cell->getValue();
+                }
+
+                list($apellido, $nombre) = $this->separarApellidoNombre($data[3]);
+
+                $registro = [
+                    'credencial'    => $data[5],  
+                    'apellido'      => $apellido,  
+                    'nombre'        => $nombre,  
+                    'cuil'          => $data[6], 
+                    'estado_agente' => 'retirado',
+                ];
+
+                $this->queryBuilder->insert($this->table, $registro);
+            }
+
+            return ['exito' => true];
+        } catch (Exception $e) {
+            $this->logger->error('Error al procesar los Excels: ' . $e->getMessage());
+            return ['exito' => false, 'error' => $e->getMessage()];
+        }        
+    }
+
+    private function separarApellidoNombre($nombreCompleto)
+    {
+        // Eliminar espacios adicionales
+        $nombreCompleto = trim(preg_replace('/\s+/', ' ', $nombreCompleto));
+        $partes = explode(' ', $nombreCompleto);
+    
+        $apellido = '';
+        $nombres = '';
+    
+        // Verificar si contiene "DE" (para apellidos compuestos)
+        $posDe = array_search('DE', $partes);
+    
+        if ($posDe !== false) {
+            // Partes anteriores a "DE" son el apellido
+            $apellido = implode(' ', array_slice($partes, 0, $posDe + 2));
+            // Partes después de "DE" son los nombres
+            $nombres = implode(' ', array_slice($partes, $posDe + 2));
+        } else {
+            // Asumir que las primeras dos palabras son apellidos, el resto nombres
+            $apellido = implode(' ', array_slice($partes, 0, 2));
+            $nombres = implode(' ', array_slice($partes, 2));
+        }
+    
+        return [$apellido, $nombres];
     }
 
 }
