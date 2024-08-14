@@ -17,7 +17,6 @@ class Controller
     public $request;
     public $qb;
     public $model;
-    public $modelName;
 
     public function __construct(){
         

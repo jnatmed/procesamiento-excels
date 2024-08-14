@@ -9,7 +9,7 @@ use Paw\App\Models\Excel;
 
 class ExcelController extends Controller
 {
-    public $modelName = Excel::class;
+    public ?string $modelName = Excel::class;
     public $data;
 
 
@@ -95,5 +95,34 @@ class ExcelController extends Controller
             view('index.view', ['mensaje' => $mensaje]);
         }
     }
+
+    public function mostrarAgentes()
+    {
+        // Número de filas por página
+        $limit = 400;
+    
+        // Obtener el parámetro 'pagina' de la variable global $_GET
+        $pagina = !is_null($this->request->get('pagina')) ? (int)$this->request->get('pagina') : 1;
+    
+        // Validar el parámetro 'pagina' para asegurarse de que sea un valor positivo
+        if ($pagina < 1) {
+            $pagina = 1;
+        }
+    
+        // Obtener el parámetro 'search' de la variable global $_GET
+        $searchTerm = !is_null($this->request->get('search')) ? trim($this->request->get('search')) : '';
+    
+        // Recuperar datos de agentes paginados con búsqueda
+        $resultado = $this->model->recuperarAgentes($pagina, $limit, $searchTerm);
+    
+        // Renderizar la vista con Twig
+        view('agentes.view', [
+            'datos' => $resultado['datos'],
+            'pagina' => $resultado['pagina'],
+            'totalPaginas' => $resultado['totalPaginas'],
+            'searchTerm' => htmlspecialchars($searchTerm, ENT_QUOTES, 'UTF-8')
+        ]);
+    }
+     
     
 }

@@ -14,24 +14,8 @@ define('COLUMNA_CUOTA_NUMERO', 9);
 
 class Excel extends Model
 {
-    protected $table = 'agentes';
 
-    // Función para eliminar acentos
-    public function eliminarAcentos($string) {
-        $acentos = array(
-            'Á'=>'A', 'É'=>'E', 'Í'=>'I', 'Ó'=>'O', 'Ú'=>'U',
-            'á'=>'a', 'é'=>'e', 'í'=>'i', 'ó'=>'o', 'ú'=>'u',
-            'À'=>'A', 'È'=>'E', 'Ì'=>'I', 'Ò'=>'O', 'Ù'=>'U',
-            'à'=>'a', 'è'=>'e', 'ì'=>'i', 'ò'=>'o', 'ù'=>'u',
-            'Ä'=>'A', 'Ë'=>'E', 'Ï'=>'I', 'Ö'=>'O', 'Ü'=>'U',
-            'ä'=>'a', 'ë'=>'e', 'ï'=>'i', 'ö'=>'o', 'ü'=>'u',
-            'Â'=>'A', 'Ê'=>'E', 'Î'=>'I', 'Ô'=>'O', 'Û'=>'U',
-            'â'=>'a', 'ê'=>'e', 'î'=>'i', 'ô'=>'o', 'û'=>'u',
-            'Ã'=>'A', 'Õ'=>'O', 'ã'=>'a', 'õ'=>'o',
-            'Å'=>'A', 'å'=>'a', 'Ñ'=>'N', 'ñ'=>'n', 'Ç'=>'C', 'ç'=>'c'
-        );
-        return strtr($string, $acentos);
-    } 
+    protected $table = 'agentes';
 
     public function procesar(
         $spreadsheet1,
@@ -131,14 +115,48 @@ class Excel extends Model
         return $response;
     }
 
+    function sonMismaPersona($nombre1, $nombre2) {
+        // Convertir nombres a mayúsculas y dividir en palabras
+        $palabrasNombre1 = array_map('trim', explode(' ', strtoupper($nombre1)));
+        $palabrasNombre2 = array_map('trim', explode(' ', strtoupper($nombre2)));
+    
+        // Contar coincidencias
+        $coincidencias = 0;
+        foreach ($palabrasNombre1 as $palabra) {
+            if (in_array($palabra, $palabrasNombre2)) {
+                $coincidencias++;
+            }
+        }
+    
+        // Verificar si hay al menos dos coincidencias
+        return $coincidencias >= 2;
+    }    
+
     public function procesarExcels(
             $excelAgentesActivos,
             $excelAgentesRetirados){
         try {
 
+            global $log;
+
+            $maxRows = 16248; // Máximo de filas a procesar
             // Procesar el primer archivo
             $sheet1 = $excelAgentesActivos->getActiveSheet();
+            
+            $rowCount = 0;
+
             foreach ($sheet1->getRowIterator() as $row) {
+
+                // Saltar la primera fila (cabecera)
+                if ($rowCount === 0) {
+                    $rowCount++;
+                    continue;
+                }                
+
+                if ($rowCount >= $maxRows) {
+                    break; // Detener si ya procesamos 5,000 filas
+                }
+
                 $data = [];
                 $cellIterator = $row->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(false);
@@ -152,39 +170,92 @@ class Excel extends Model
                     'apellido'   => $data[1],  // Ajustar con base en el índice correcto
                     'nombre'     => $data[2],  // Ajustar con base en el índice correcto
                     'cuil'       => '',  
-                    'estado_agente' => 'actividad',  // Suponiendo que este archivo es solo de activos
+                    'estado_id' => 1,  // Suponiendo que este archivo es solo de activos
                 ];
 
                 $this->queryBuilder->insert($this->table, $registro);
+
+                $rowCount++; // Incrementar el contador de filas procesadas
+
             }
 
-            // Procesar el segundo archivo
-            $sheet2 = $excelAgentesRetirados->getActiveSheet();
-            foreach ($sheet2->getRowIterator() as $row) {
-                $data = [];
-                $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(false);
+            // $maxRows = 13932; // Máximo de filas a procesar
+            // // Procesar el segundo archivo
+            // $sheet2 = $excelAgentesRetirados->getActiveSheet();
 
-                foreach ($cellIterator as $cell) {
-                    $data[] = $cell->getValue();
-                }
+            // $rowCount = 0;
 
-                list($apellido, $nombre) = $this->separarApellidoNombre($data[3]);
+            // foreach ($sheet2->getRowIterator() as $row) {
+                
+            //     // Saltar la primera fila (cabecera)
+            //     if ($rowCount === 0) {
+            //         $rowCount++;
+            //         continue;
+            //     }            
 
-                $registro = [
-                    'credencial'    => $data[5],  
-                    'apellido'      => $apellido,  
-                    'nombre'        => $nombre,  
-                    'cuil'          => $data[6], 
-                    'estado_agente' => 'retirado',
-                ];
+            //     if ($rowCount >= $maxRows) {
+            //         break; // Detener si ya procesamos 5,000 filas
+            //     }
 
-                $this->queryBuilder->insert($this->table, $registro);
-            }
+            //     $data = [];
+            //     $cellIterator = $row->getCellIterator();
+            //     $cellIterator->setIterateOnlyExistingCells(false);
+
+            //     foreach ($cellIterator as $cell) {
+            //         $cellValue = $cell->getValue();
+            //         if ($cellValue !== null && $cellValue !== '') {
+            //             $data[] = $cellValue;
+            //         }
+            //     }
+
+            //     // Validar si el índice 3 existe en $data antes de intentar acceder a él
+            //     if (!isset($data[3])) {
+            //         $log->warning("El índice 3 no existe en la fila {$rowCount}. Fila omitida.");
+            //         continue; // Saltar esta fila y continuar con la siguiente
+            //     }
+
+            //     list($apellido, $nombre) = $this->separarApellidoNombre($data[3]);
+
+            //     $cuil = trim($data[6]);
+
+            //     // Reemplazar cualquier carácter invisible o espacio especial
+            //     $cuil = preg_replace('/\s+/u', '', $cuil);
+
+            //     // Verificar si el valor de 'cuil' es demasiado largo
+            //     $maxCuilLength = 16; // Por ejemplo, si el máximo permitido es 11 caracteres
+                
+            //     if (strlen($cuil) > $maxCuilLength) {
+            //         $log->debug("CUIL demasiado largo: {$cuil}");
+            //         $cuil = substr($cuil, 0, $maxCuilLength); // Truncar a la longitud permitida
+            //     }
+
+            //     $credencial = trim($data[2]);
+                
+            //     $registro = [
+            //         'credencial'    => $credencial,  
+            //         'apellido'      => $apellido,  
+            //         'nombre'        => $nombre,  
+            //         'cuil'          => $cuil, 
+            //         'estado_id' => 2,
+            //     ];
+
+            //     // $log->info("registro: ", [$registro]);
+
+            //     try {
+            //         $this->queryBuilder->insert($this->table, $registro);
+            //     } catch (Exception $e) {
+            //         $log->error("Error al insertar en la fila {$rowCount}: " . $e->getMessage());
+            //         return ['exito' => false, 'error' => "Error en la fila {$rowCount}: " . $e->getMessage()];
+            //     }
+
+            //     $rowCount++; // Incrementar el contador de filas procesadas
+
+            // }
 
             return ['exito' => true];
         } catch (Exception $e) {
-            $this->logger->error('Error al procesar los Excels: ' . $e->getMessage());
+            
+            $log->error('Error al procesar los Excels: ' . $e->getMessage());
             return ['exito' => false, 'error' => $e->getMessage()];
         }        
     }
@@ -213,6 +284,25 @@ class Excel extends Model
         }
     
         return [$apellido, $nombres];
+    }
+
+    public function recuperarAgentes($pagina = 1, $limit = 20, $searchTerm = '') {
+        $offset = ($pagina - 1) * $limit;
+        $params = [];
+    
+        // Recuperar datos con paginación y búsqueda
+        $datos = $this->queryBuilder->selectPaginated('agentes', $params, $limit, $offset, $searchTerm);
+    
+        // Obtener el total de filas para calcular el número total de páginas
+        $totalAgentes = $this->queryBuilder->select('agentes', []);
+        $totalFilas = count($totalAgentes);
+        $totalPaginas = ceil($totalFilas / $limit);
+    
+        return [
+            'datos' => $datos,
+            'pagina' => $pagina,
+            'totalPaginas' => $totalPaginas
+        ];
     }
 
 }
