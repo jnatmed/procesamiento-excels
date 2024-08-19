@@ -2,4 +2,4 @@ vendor/
 logs/
 composer.lock
 .env
-src/App/views/cache
+src/App/views/cache/
